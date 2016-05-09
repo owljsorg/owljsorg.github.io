@@ -1,0 +1,24 @@
+html, body {
+    height: 100%;
+}
+body {
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+    background: #007766;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+a {
+    color: white;
+}
+.wrapper {
+    text-align: center;
+}
+.logo {
+    font-size: 60px;
+    padding: 5px;
+    font-weight: bold;
+}
