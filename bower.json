@@ -1,0 +1,21 @@
+{
+  "name": "owljsorg.github.io",
+  "homepage": "https://github.com/owljsorg/owljsorg.github.io",
+  "authors": [
+    "omegascorp <omegascorp@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "owl.js": "docs"
+  }
+}
