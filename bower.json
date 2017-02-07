@@ -16,6 +16,6 @@
     "tests"
   ],
   "dependencies": {
-    "owl.js": "docs"
+    "owljs": "docs"
   }
 }

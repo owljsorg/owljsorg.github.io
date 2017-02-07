@@ -13,7 +13,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">owl.js</h1>
-      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owl.js" target="_blank" class="btn">View on npm</a>
+      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owljs" target="_blank" class="btn">View on npm</a>
     </section>
     <section data-spy="scroll" data-target=".scrollspy" class="main-content">
       <div class="row">
@@ -23,6 +23,7 @@
                 <ul class="nav nav-stacked">
                 </ul></a></li>
             <li><a href="owl.Collection.js.html">owl.Collection.js</a></li>
+            <li><a href="owl.Controller.js.html">owl.Controller.js</a></li>
             <li><a href="owl.Model.js.html">owl.Model.js</a></li>
             <li><a href="owl.Promise.js.html">owl.Promise.js</a></li>
             <li><a href="owl.Router.js.html">owl.Router.js</a></li>
@@ -36,8 +37,10 @@
         <div class="col-md-9">
           <section id="Main" class="readme"><h1>owl.js</h1>
 <p><strong>Backbone-like frontend library</strong></p>
-<p><a href="https://travis-ci.org/omegascorp/owl"><img src="https://travis-ci.org/omegascorp/owl.svg?branch=master" alt="Build Status"></a>
-<a href="https://coveralls.io/github/omegascorp/owl?branch=master"><img src="https://coveralls.io/repos/github/omegascorp/owl/badge.svg?branch=master" alt="Coverage Status"></a></p>
+<p><a href="https://travis-ci.org/owljsorg/owljs"><img src="https://travis-ci.org/owljsorg/owljs.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/owljsorg/owljs?branch=master"><img src="https://coveralls.io/repos/github/owljsorg/owljs/badge.svg?branch=master" alt="Coverage Status"></a>
+<a href="http://waffle.io/owljsorg/owljs"><img src="https://badge.waffle.io/owljsorg/owljs.png?label=ready&amp;title=Ready" alt="Stories in Ready"></a></p>
+<p><strong>Ask a question in <a href="https://gitter.im/owljsorg/owl.js">gitter</a>.</strong></p>
 <h2>Install</h2>
 <p><strong>Bower</strong></p>
 <pre><code>bower install owl.js
@@ -55,17 +58,18 @@
 npm start
 </code></pre>
 <h2>Concept</h2>
-<p>owl.js is very simple library is very similar to of backbone.js, without dependency on underscore.js and jQuery.
+<p>owl.js is simple library similar to backbone.js, without dependency on underscore.js and jQuery.
 If you know backbone.js you mostly know owl.js.</p>
 <p>The library uses <a href="https://en.wikipedia.org/wiki/Model-view-controller">MVC</a> as main pattern.
-owl.Model is responsible for representing data from server based on <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> architecture.
-owl.View is responsible for rendering view it can use any template engine to do it or generate DOM manually.
-But there is no special class for controller. You can create any object and use it as controller.
-Main goal of the controller to prepare data for the view, call the view and pass the data.</p>
-<p>Also there is few classes out of the main pattern.
-owl.Router is created to manage pages based on URL.
+<strong>owl.Model</strong> is responsible for representing data from server based on <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> architecture.
+<strong>owl.View</strong> is responsible for rendering view it can use any template engine to do it or generate DOM manually.
+<strong>owl.Controller</strong> is responsible for business logic.</p>
+<p>Also there is few classes out of the main pattern.</p>
+<p><strong>owl.Router</strong> is created to manage pages based on URL.
 It contains records named routes.
-Each route contains path and name of controller and action (action is just a method in the controller) that will be called for specified path.</p>
+Each route contains path and a controller that will be called for specified path.</p>
+<p><strong>owl.Collection</strong> is an array of <strong>owl.Models</strong> it is created to represent model sets.</p>
+<p>In is not necessary to use all of those classes, for example you can use <strong>React</strong> components instead of <strong>owl.View</strong>.</p>
 <h2>Development</h2>
 <p><strong>Run unit tests</strong></p>
 <pre><code>karma start

@@ -13,7 +13,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">owl.js</h1>
-      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owl.js" target="_blank" class="btn">View on npm</a>
+      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owljs" target="_blank" class="btn">View on npm</a>
     </section>
     <section data-spy="scroll" data-target=".scrollspy" class="main-content">
       <div class="row">
@@ -21,11 +21,16 @@
           <ul id="sidebar" class="nav nav-stacked fixed">
             <li><a href="index.html">Main</a></li>
             <li><a href="owl.Collection.js.html">owl.Collection.js</a></li>
+            <li><a href="owl.Controller.js.html">owl.Controller.js</a></li>
             <li class="active"><a href="owl.Model.js.html">owl.Model.js
                 <ul class="nav nav-stacked">
+                  <li><a href="#parseIdAttribute"><i class="alert alert-info"></i><span>parseIdAttribute</span></a>
+                  </li>
                   <li><a href="#get"><i class="alert alert-info"></i><span>get</span></a>
                   </li>
                   <li><a href="#set"><i class="alert alert-info"></i><span>set</span></a>
+                  </li>
+                  <li><a href="#getEndpointUrl"><i class="alert alert-info"></i><span>getEndpointUrl</span></a>
                   </li>
                   <li><a href="#fetch"><i class="alert alert-info"></i><span>fetch</span></a>
                   </li>
@@ -68,6 +73,37 @@
           </ul>
         </div>
         <div class="col-md-9">
+          <section id="parseIdAttribute">
+            <h1>parseIdAttribute</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>parseIdAttribute()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>url</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Parses Id attribute from url</p></div>
+          <pre><code class="language-javascript">parseIdAttribute: function(url) {
+    var found = url.match(/:([a-zA-z0-9_]+)/);
+    if (found instanceof Array &amp;&amp; found.length &gt; 1) {
+        return found[1];
+    }
+    return null;
+},</code></pre>
           <section id="get">
             <h1>get</h1>
             <h5 class="subheader"></h5>
@@ -75,7 +111,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>get()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets attribute by name</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -97,6 +132,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets attribute by name</p></div>
+          <pre><code class="language-javascript">get: function(name) {
+    return this.data[name] || this.defaults[name];
+},</code></pre>
           <section id="set">
             <h1>set</h1>
             <h5 class="subheader"></h5>
@@ -104,7 +143,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>set()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Sets attribute value by name</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -126,6 +164,50 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Sets attribute value by name</p></div>
+          <pre><code class="language-javascript">set: function(name, value) {
+    this.data[name] = value;
+    this.updateCollection();
+    this.trigger('change', name);
+},</code></pre>
+          <section id="getEndpointUrl">
+            <h1>getEndpointUrl</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getEndpointUrl()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>return</td>
+                <td>string</td>
+                <td><p>item url</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Gets item url</p></div>
+          <pre><code class="language-javascript">getEndpointUrl: function() {
+    var id = this.data[this.idAttribute];
+    if (this.url) {
+        if (id) {
+            return this.url.replace(':' + this.idAttribute, id);
+        }
+        return this.url;
+    } else {
+        if (id) {
+            return this.urlRoot + '/' + id;
+        }
+        return this.urlRoot;
+    }
+},</code></pre>
           <section id="fetch">
             <h1>fetch</h1>
             <h5 class="subheader"></h5>
@@ -133,7 +215,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>fetch()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets data from the sever</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -155,6 +236,22 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets data from the sever</p></div>
+          <pre><code class="language-javascript">fetch: function(query) {
+    var that = this,
+        url = this.getEndpointUrl();
+    url +=  owl.ajax.toQueryString(query);
+    return owl.ajax.request({
+        url: url,
+        type: 'GET'
+    })
+    .then(function(result) {
+        that.data = result;
+        that.updateCollection();
+        that.trigger('change', Object.keys(that.data));
+        return result;
+    });
+},</code></pre>
           <section id="clear">
             <h1>clear</h1>
             <h5 class="subheader"></h5>
@@ -163,6 +260,10 @@
             </p>
           </section>
           <div class="description"><p>Removes all attributes from the model</p></div>
+          <pre><code class="language-javascript">clear: function() {
+    this.data = {};
+    this.updateCollection();
+},</code></pre>
           <section id="save">
             <h1>save</h1>
             <h5 class="subheader"></h5>
@@ -170,7 +271,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>save()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Save a model to database</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -192,6 +292,28 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Save a model to database</p></div>
+          <pre><code class="language-javascript">save: function(query) {
+    var that = this;
+    var url = this.getEndpointUrl();
+    var id = this.data[this.idAttribute];
+    if(id) {
+        url += '/' + this.data[this.idAttribute];
+    }
+    return owl.ajax.request({
+        url: url + owl.ajax.toQueryString(query),
+        type: id ? 'PUT' : 'POST',
+        data: this.data
+    })
+    .then(function(result) {
+        if(result[that.idAttribute]) {
+            that.data[that.idAttribute] = result[that.idAttribute];
+        }
+        that.updateCollection();
+        that.trigger('change', [that.idAttribute]);
+        return result;
+    });
+},</code></pre>
           <section id="update">
             <h1>update</h1>
             <h5 class="subheader"></h5>
@@ -199,7 +321,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>update()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Updates local data and saves model</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -226,6 +347,22 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Updates local data and saves model</p></div>
+          <pre><code class="language-javascript">update: function(data, query) {
+    var that = this;
+    var id = this.data[this.idAttribute];
+    if(!id) {
+        return new Promise(function(resolve, reject) {
+            reject(new Error('Can not update model without id'));
+        });
+    }
+    this.data = owl.util.extend(this.data, data, true);
+    return this.save(query).then(function(result) {
+        that.updateCollection();
+        that.trigger('change', Object.keys(data));
+        return result;
+    });
+},</code></pre>
           <section id="patch">
             <h1>patch</h1>
             <h5 class="subheader"></h5>
@@ -233,7 +370,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>patch()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Partially updates model</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -251,7 +387,7 @@
               <tr>
                 <td>query</td>
                 <td>object</td>
-                <td><p>Request query</p></td>
+                <td><p>Request query * @param {string} path Additional path</p></td>
               </tr>
               <tr>
                 <td>return</td>
@@ -260,6 +396,30 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Partially updates model</p></div>
+          <pre><code class="language-javascript">patch: function(data, query, path) {
+    var that = this;
+    var url = this.getEndpointUrl();
+
+    if (typeof path === 'string') {
+        url += path;
+    }
+
+    if (typeof query === 'object' &amp;&amp; query !== null) {
+        url += owl.ajax.toQueryString(query);
+    }
+
+    this.data = owl.util.extend(this.data, data, true);
+    return owl.ajax.request({
+        url: url,
+        type: 'PATCH',
+        data: data
+    }).then(function(result) {
+        that.updateCollection();
+        that.trigger('change', Object.keys(data));
+        return result;
+    });
+},</code></pre>
           <section id="updateCollection">
             <h1>updateCollection</h1>
             <h5 class="subheader"></h5>
@@ -268,6 +428,11 @@
             </p>
           </section>
           <div class="description"><p>Updates collection data</p></div>
+          <pre><code class="language-javascript">updateCollection: function() {
+    if(this.collection) {
+        this.collection.update(this.collectionIndex);
+    }
+},</code></pre>
           <section id="destroy">
             <h1>destroy</h1>
             <h5 class="subheader"></h5>
@@ -275,7 +440,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>destroy()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Remove a model</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -297,6 +461,23 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Remove a model</p></div>
+          <pre><code class="language-javascript">destroy: function(query) {
+    var that = this;
+    var id = this.data[this.idAttribute];
+    if (!id) {
+        return new Promise(function(resolve, reject) {
+            reject(new Error('Can not destroy model without id'));
+        });
+    }
+    return owl.ajax.request({
+        url: this.getEndpointUrl() + owl.ajax.toQueryString(query),
+        type: 'DELETE'
+    }).then(function(result) {
+        that.clear();
+        return result;
+    });
+},</code></pre>
           <section id="getData">
             <h1>getData</h1>
             <h5 class="subheader"></h5>
@@ -304,7 +485,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getData()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets models data</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -321,6 +501,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets models data</p></div>
+          <pre><code class="language-javascript">getData: function() {
+    return this.data;
+},</code></pre>
           <section id="setData">
             <h1>setData</h1>
             <h5 class="subheader"></h5>
@@ -329,6 +513,11 @@
             </p>
           </section>
           <div class="description"><p>Set model data</p></div>
+          <pre><code class="language-javascript">setData: function(data) {
+    this.data = data;
+    this.updateCollection();
+    this.trigger('change');
+},</code></pre>
           <section id="getCollection">
             <h1>getCollection</h1>
             <h5 class="subheader"></h5>
@@ -336,7 +525,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getCollection()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets model collection</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -353,6 +541,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets model collection</p></div>
+          <pre><code class="language-javascript">getCollection: function() {
+    return this.collection;
+},</code></pre>
           <section id="getCollectionIndex">
             <h1>getCollectionIndex</h1>
             <h5 class="subheader"></h5>
@@ -360,7 +552,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getCollectionIndex()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets model collection index</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -377,6 +568,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets model collection index</p></div>
+          <pre><code class="language-javascript">getCollectionIndex: function() {
+    return this.collectionIndex;
+},</code></pre>
           <section id="on">
             <h1>on</h1>
             <h5 class="subheader"></h5>
@@ -384,7 +579,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>on()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Adds event listener</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -406,6 +600,13 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Adds event listener</p></div>
+          <pre><code class="language-javascript">on: function(event, listener) {
+    if (!this.events[event]) {
+        this.events[event] = [];
+    }
+    this.events[event].push(listener);
+},</code></pre>
           <section id="off">
             <h1>off</h1>
             <h5 class="subheader"></h5>
@@ -413,7 +614,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>off()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Removes event listener</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -435,6 +635,18 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Removes event listener</p></div>
+          <pre><code class="language-javascript">off: function(event, listener) {
+    if (!event) {
+        this.events = [];
+    } else if (!listener) {
+        delete this.events[event];
+    } else if (this.events[event]) {
+        this.events[event] = this.events[event].filter(function(currentListener) {
+            return currentListener !== listener;
+        });
+    }
+},</code></pre>
           <section id="triggerSingle">
             <h1>triggerSingle</h1>
             <h5 class="subheader"></h5>
@@ -442,7 +654,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>triggerSingle()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Trigger single event</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -459,6 +670,18 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Trigger single event</p></div>
+          <pre><code class="language-javascript">triggerSingle: function(event) {
+    var listeners = this.events[event];
+    if(this.collection) {
+        this.collection.trigger(event);
+    }
+    if (listeners) {
+        listeners.forEach(function(listener) {
+            listener();
+        });
+    }
+},</code></pre>
           <section id="trigger">
             <h1>trigger</h1>
             <h5 class="subheader"></h5>
@@ -466,7 +689,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>trigger()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Triggers events</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -488,6 +710,21 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Triggers events</p></div>
+          <pre><code class="language-javascript">trigger: function(event, subEvents) {
+    var that = this;
+    this.triggerSingle(event);
+    if(subEvents &amp;&amp; subEvents instanceof Array) {
+        subEvents.forEach(function(subEvent) {
+            that.triggerSingle(event + ':' + subEvent);
+        });
+    } else if (subEvents) {
+        this.triggerSingle(event + ':' + subEvents);
+    }
+}
+    };
+    owl.Model = Model;
+})(window, owl);</code></pre>
           <div class="footer site-footer">
             <div class="span site-footer-owner"><a href="https://github.com/mr-doc/mr-doc-theme-cayman">Cayman</a> is maintained by <a href="https://github.com/iwatakeshi">iwatakeshi</a>.</div>
             <div class="span site-footer-credits">This page was generated by <a href="https://github.com/mr-doc/mr-doc">Mr. Doc</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</div>

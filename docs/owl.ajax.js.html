@@ -13,7 +13,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">owl.js</h1>
-      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owl.js" target="_blank" class="btn">View on npm</a>
+      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owljs" target="_blank" class="btn">View on npm</a>
     </section>
     <section data-spy="scroll" data-target=".scrollspy" class="main-content">
       <div class="row">
@@ -21,6 +21,7 @@
           <ul id="sidebar" class="nav nav-stacked fixed">
             <li><a href="index.html">Main</a></li>
             <li><a href="owl.Collection.js.html">owl.Collection.js</a></li>
+            <li><a href="owl.Controller.js.html">owl.Controller.js</a></li>
             <li><a href="owl.Model.js.html">owl.Model.js</a></li>
             <li><a href="owl.Promise.js.html">owl.Promise.js</a></li>
             <li><a href="owl.Router.js.html">owl.Router.js</a></li>
@@ -53,7 +54,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>request()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Makes request to the server</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -75,6 +75,50 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Makes request to the server</p></div>
+          <pre><code class="language-javascript">request: function (settings) {
+    var that = this;
+    return new owl.Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest(),
+            method = settings.type || 'GET',
+            url = settings.url,
+            data = settings.data,
+            body = null,
+            key;
+
+        if (method === 'GET' || method === 'DELETE') {
+            url += that.toQueryString(data);
+        } else {
+            body = that.toJsonString(data);
+        }
+        xhr.onreadystatechange = function() {
+            var response,
+                error;
+            if (xhr.readyState === 4) {
+                if (xhr.status &gt;= 200 &amp;&amp; xhr.status &lt; 300) {
+                    response = JSON.parse(xhr.responseText);
+                    settings.success &amp;&amp; settings.success(response);
+                    resolve(response);
+                } else {
+                    owl.ajax.error(xhr);
+                    settings.error &amp;&amp; settings.error(xhr, xhr.statusText);
+                    error = new Error('Respond with ' + xhr.status);
+                    error.status = xhr.status;
+                    error.responseText = xhr.responseText;
+                    error.json = JSON.parse(xhr.responseText);
+                    reject(error);
+                }
+            }
+        };
+        xhr.open(method, url, true);
+        for (key in _headers) {
+            if (_headers.hasOwnProperty(key)) {
+                xhr.setRequestHeader(key, _headers[key]);
+            }
+        }
+        xhr.send(body);
+    });
+},</code></pre>
           <section id="setHeader">
             <h1>setHeader</h1>
             <h5 class="subheader"></h5>
@@ -82,7 +126,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>setHeader()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Sets a header for each request</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -104,6 +147,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Sets a header for each request</p></div>
+          <pre><code class="language-javascript">setHeader: function(key, value) {
+    _headers[key] = value;
+},</code></pre>
           <section id="removeHeader">
             <h1>removeHeader</h1>
             <h5 class="subheader"></h5>
@@ -111,7 +158,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>removeHeader()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Removes a header</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -128,6 +174,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Removes a header</p></div>
+          <pre><code class="language-javascript">removeHeader: function(key) {
+    delete _headers[key];
+},</code></pre>
           <section id="error">
             <h1>error</h1>
             <h5 class="subheader"></h5>
@@ -135,7 +185,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>error()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Default event error listener</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -152,6 +201,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Default event error listener</p></div>
+          <pre><code class="language-javascript">error: function(xhr) {
+    console.log(xhr);
+},</code></pre>
           <section id="toQueryString">
             <h1>toQueryString</h1>
             <h5 class="subheader"></h5>
@@ -159,7 +212,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>toQueryString()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Makes query string from data</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -181,6 +233,20 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Makes query string from data</p></div>
+          <pre><code class="language-javascript">toQueryString: function(data) {
+    var query = [],
+        key;
+    if (!(typeof data === 'object')) {
+        return data || '';
+    }
+    for (key in data) {
+        if (data.hasOwnProperty(key)) {
+            query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+        }
+    }
+    return '?' + query.join('&amp;');
+},</code></pre>
           <section id="toJsonString">
             <h1>toJsonString</h1>
             <h5 class="subheader"></h5>
@@ -188,7 +254,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>toJsonString()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Stringify an object</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -210,6 +275,15 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Stringify an object</p></div>
+          <pre><code class="language-javascript">toJsonString: function(data) {
+    if (!(typeof data === 'object')) {
+        return data || '';
+    }
+    return JSON.stringify(data);
+}
+    };
+})(owl);</code></pre>
           <div class="footer site-footer">
             <div class="span site-footer-owner"><a href="https://github.com/mr-doc/mr-doc-theme-cayman">Cayman</a> is maintained by <a href="https://github.com/iwatakeshi">iwatakeshi</a>.</div>
             <div class="span site-footer-credits">This page was generated by <a href="https://github.com/mr-doc/mr-doc">Mr. Doc</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</div>

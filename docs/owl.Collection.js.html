@@ -13,7 +13,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">owl.js</h1>
-      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owl.js" target="_blank" class="btn">View on npm</a>
+      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owljs" target="_blank" class="btn">View on npm</a>
     </section>
     <section data-spy="scroll" data-target=".scrollspy" class="main-content">
       <div class="row">
@@ -47,6 +47,7 @@
                   <li><a href="#trigger"><i class="alert alert-info"></i><span>trigger</span></a>
                   </li>
                 </ul></a></li>
+            <li><a href="owl.Controller.js.html">owl.Controller.js</a></li>
             <li><a href="owl.Model.js.html">owl.Model.js</a></li>
             <li><a href="owl.Promise.js.html">owl.Promise.js</a></li>
             <li><a href="owl.Router.js.html">owl.Router.js</a></li>
@@ -65,7 +66,6 @@
               <div class="label label-success radius ctx-type">constructor</div><span>&nbsp;</span><span>Collection()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>owl.Collection</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -87,6 +87,17 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>owl.Collection</p></div>
+          <pre><code class="language-javascript">function Collection(data, options){
+    this.url = options.url;
+    this.model = options.model;
+    this.data = [];
+    this.models = [];
+    this.events = {};
+
+    this.setData(data);
+}
+Collection.prototype = {</code></pre>
           <section id="fetch">
             <h1>fetch</h1>
             <h5 class="subheader"></h5>
@@ -94,7 +105,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>fetch()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets data from server</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -111,6 +121,18 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets data from server</p></div>
+          <pre><code class="language-javascript">fetch: function(query) {
+    var that = this;
+    return owl.ajax.request({
+        url: this.url + owl.ajax.toQueryString(query),
+        type: 'GET'
+    })
+    .then(function(result) {
+        that.setData(result);
+        return result;
+    });
+},</code></pre>
           <section id="clear">
             <h1>clear</h1>
             <h5 class="subheader"></h5>
@@ -119,6 +141,12 @@
             </p>
           </section>
           <div class="description"><p>Removes models from collection</p></div>
+          <pre><code class="language-javascript">clear: function() {
+    this.data = [];
+    this.models = [];
+    this.length = 0;
+    this.trigger('change');
+},</code></pre>
           <section id="setData">
             <h1>setData</h1>
             <h5 class="subheader"></h5>
@@ -126,7 +154,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>setData()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Sets collection data</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -143,6 +170,24 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Sets collection data</p></div>
+          <pre><code class="language-javascript">setData: function(data) {
+    var that = this;
+    if (data instanceof Array) {
+        this.data = data;
+        this.length = data.length;
+        this.models = data.map(function(item, index) {
+            return new that.model(item, {
+                collection: that,
+                collectionIndex: index
+            });
+        });
+    } else {
+        this.models = [];
+        this.length = 0;
+    }
+    that.trigger('change');
+},</code></pre>
           <section id="getData">
             <h1>getData</h1>
             <h5 class="subheader"></h5>
@@ -150,7 +195,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getData()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets collection data</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -167,6 +211,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets collection data</p></div>
+          <pre><code class="language-javascript">getData: function() {
+    return this.data;
+},</code></pre>
           <section id="getModels">
             <h1>getModels</h1>
             <h5 class="subheader"></h5>
@@ -174,7 +222,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getModels()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets collection models</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -191,6 +238,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets collection models</p></div>
+          <pre><code class="language-javascript">getModels: function() {
+    return this.models;
+},</code></pre>
           <section id="getLength">
             <h1>getLength</h1>
             <h5 class="subheader"></h5>
@@ -198,7 +249,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getLength()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets collection length</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -215,6 +265,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets collection length</p></div>
+          <pre><code class="language-javascript">getLength: function() {
+    return this.length;
+},</code></pre>
           <section id="get">
             <h1>get</h1>
             <h5 class="subheader"></h5>
@@ -223,6 +277,9 @@
             </p>
           </section>
           <div class="description"><p>Gets a model by index</p></div>
+          <pre><code class="language-javascript">get: function(index) {
+   return this.models[index];
+},</code></pre>
           <section id="update">
             <h1>update</h1>
             <h5 class="subheader"></h5>
@@ -231,6 +288,15 @@
             </p>
           </section>
           <div class="description"><p>Updates collection data</p></div>
+          <pre><code class="language-javascript">update: function(index) {
+    if (typeof index === 'number') {
+        this.data[index] = this.models[index].getData();
+    } else {
+        this.data = this.models.map(function(model) {
+            return model.getData();
+        });
+    }
+},</code></pre>
           <section id="on">
             <h1>on</h1>
             <h5 class="subheader"></h5>
@@ -238,7 +304,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>on()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Adds event listener</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -260,6 +325,13 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Adds event listener</p></div>
+          <pre><code class="language-javascript">on: function(event, listener) {
+    if (!this.events[event]) {
+        this.events[event] = [];
+    }
+    this.events[event].push(listener);
+},</code></pre>
           <section id="off">
             <h1>off</h1>
             <h5 class="subheader"></h5>
@@ -267,7 +339,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>off()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Removes event listener</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -289,6 +360,18 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Removes event listener</p></div>
+          <pre><code class="language-javascript">off: function(event, listener) {
+    if (!event) {
+        this.events = [];
+    } else if (!listener) {
+        delete this.events[event];
+    } else if (this.events[event]) {
+        this.events[event] = this.events[event].filter(function (currentListener) {
+            return currentListener !== listener;
+        });
+    }
+},</code></pre>
           <section id="trigger">
             <h1>trigger</h1>
             <h5 class="subheader"></h5>
@@ -296,7 +379,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>trigger()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Triggers event</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -313,6 +395,18 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Triggers event</p></div>
+          <pre><code class="language-javascript">trigger: function(event) {
+    var listeners = this.events[event];
+    if (listeners) {
+        listeners.forEach(function(listener) {
+            listener();
+        });
+    }
+}
+    };
+    owl.Collection = Collection;
+})(window, owl);</code></pre>
           <div class="footer site-footer">
             <div class="span site-footer-owner"><a href="https://github.com/mr-doc/mr-doc-theme-cayman">Cayman</a> is maintained by <a href="https://github.com/iwatakeshi">iwatakeshi</a>.</div>
             <div class="span site-footer-credits">This page was generated by <a href="https://github.com/mr-doc/mr-doc">Mr. Doc</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</div>

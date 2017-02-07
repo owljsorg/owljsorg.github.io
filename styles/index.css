@@ -4,15 +4,15 @@ html, body {
 body {
     padding: 0;
     margin: 0;
-    font-family: sans-serif;
-    background: #007766;
+    font-family: Ubuntu, sans-serif;
+    background: #dddddd;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #510375;
 }
 a {
-    color: white;
+    color: #510375;
 }
 .wrapper {
     text-align: center;

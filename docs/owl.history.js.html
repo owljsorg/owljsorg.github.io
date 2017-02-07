@@ -13,7 +13,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">owl.js</h1>
-      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owl.js" target="_blank" class="btn">View on npm</a>
+      <h2 class="project-tagline">Backbone-like frontend library</h2><a href="https://github.com/owljsorg/owl.js#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/owljs" target="_blank" class="btn">View on npm</a>
     </section>
     <section data-spy="scroll" data-target=".scrollspy" class="main-content">
       <div class="row">
@@ -21,6 +21,7 @@
           <ul id="sidebar" class="nav nav-stacked fixed">
             <li><a href="index.html">Main</a></li>
             <li><a href="owl.Collection.js.html">owl.Collection.js</a></li>
+            <li><a href="owl.Controller.js.html">owl.Controller.js</a></li>
             <li><a href="owl.Model.js.html">owl.Model.js</a></li>
             <li><a href="owl.Promise.js.html">owl.Promise.js</a></li>
             <li><a href="owl.Router.js.html">owl.Router.js</a></li>
@@ -85,7 +86,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>init()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Init the history</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -102,6 +102,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Init the history</p></div>
+          <pre><code class="language-javascript">init: function(options) {
+    _options = owl.util.extend(_defaultOptions, options, true);
+},</code></pre>
           <section id="getOption">
             <h1>getOption</h1>
             <h5 class="subheader"></h5>
@@ -109,7 +113,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getOption()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets an option</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -131,6 +134,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets an option</p></div>
+          <pre><code class="language-javascript">getOption: function(name) {
+    return _options[name];
+},</code></pre>
           <section id="start">
             <h1>start</h1>
             <h5 class="subheader"></h5>
@@ -139,6 +146,14 @@
             </p>
           </section>
           <div class="description"><p>Starts watching popstate event</p></div>
+          <pre><code class="language-javascript">start: function() {
+    var that = this;
+    this.open(this.getLocation());
+    _listener = window.addEventListener('popstate', function() {
+        that.open(that.getLocation());
+    }, false);
+    _started = true;
+},</code></pre>
           <section id="isStarted">
             <h1>isStarted</h1>
             <h5 class="subheader"></h5>
@@ -146,7 +161,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>isStarted()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Checks is history started</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -163,6 +177,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Checks is history started</p></div>
+          <pre><code class="language-javascript">isStarted: function() {
+    return _started;
+},</code></pre>
           <section id="stop">
             <h1>stop</h1>
             <h5 class="subheader"></h5>
@@ -171,6 +189,9 @@
             </p>
           </section>
           <div class="description"><p>Stop watching popstate event</p></div>
+          <pre><code class="language-javascript">stop: function() {
+    window.removeEventListener('popstate', _listener);
+},</code></pre>
           <section id="navigate">
             <h1>navigate</h1>
             <h5 class="subheader"></h5>
@@ -178,7 +199,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>navigate()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Adds new item to the navigation history</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -195,6 +215,11 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Adds new item to the navigation history</p></div>
+          <pre><code class="language-javascript">navigate: function(path) {
+    window.history.pushState(null, null, _options.baseUrl + path);
+    this.open(path);
+},</code></pre>
           <section id="replace">
             <h1>replace</h1>
             <h5 class="subheader"></h5>
@@ -202,7 +227,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>replace()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Replaces current item in the navigation history</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -219,6 +243,11 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Replaces current item in the navigation history</p></div>
+          <pre><code class="language-javascript">replace: function(path) {
+    window.history.replaceState(null, null, _options.baseUrl + path);
+    this.open(path);
+},</code></pre>
           <section id="getLocation">
             <h1>getLocation</h1>
             <h5 class="subheader"></h5>
@@ -226,7 +255,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getLocation()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets current location</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -243,6 +271,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets current location</p></div>
+          <pre><code class="language-javascript">getLocation: function () {
+    return window.location.pathname.replace(_options.baseUrl, '').replace(/\/$/, '');
+},</code></pre>
           <section id="getHash">
             <h1>getHash</h1>
             <h5 class="subheader"></h5>
@@ -250,7 +282,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getHash()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets current hash</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -267,6 +298,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets current hash</p></div>
+          <pre><code class="language-javascript">getHash: function() {
+    return window.location.hash.substr(1);
+},</code></pre>
           <section id="setHash">
             <h1>setHash</h1>
             <h5 class="subheader"></h5>
@@ -274,7 +309,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>setHash()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Sets hash</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -291,6 +325,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Sets hash</p></div>
+          <pre><code class="language-javascript">setHash: function(hash) {
+    window.location.hash = hash;
+},</code></pre>
           <section id="open">
             <h1>open</h1>
             <h5 class="subheader"></h5>
@@ -298,7 +336,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>open()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Opens the page by path</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -313,8 +350,42 @@
                 <td></td>
                 <td></td>
               </tr>
+              <tr>
+                <td>return</td>
+                <td>Promise</td>
+                <td><p>A promise that resolves to set destroyer function if any given</p></td>
+              </tr>
             </tbody>
           </table>
+          <div class="description"><p>Opens the page by path</p></div>
+          <pre><code class="language-javascript">open: function(path) {
+    var router;
+    if (_destroyFunction) {
+        _destroyFunction();
+        _destroyFunction = null;
+    }
+    Object.keys(_routers).some(function(routerPath) {
+        if(path === routerPath ||
+            (path.indexOf(routerPath) === 0 &amp;&amp; path.length &gt; routerPath.length &amp;&amp; path[routerPath.length] === '/')) {
+            router = _routers[routerPath];
+            path = path.replace(routerPath, '');
+            return true;
+        }
+        return false;
+    });
+    if (!router) {
+        router = _defaultRouter;
+    }
+    if (!router) {
+        console.log('Default router is not defined');
+        return;
+    }
+    this.trigger('change');
+
+    return router.open(path).then(function (destroyer) {
+      _destroyFunction = destroyer;
+    });
+},</code></pre>
           <section id="setRouter">
             <h1>setRouter</h1>
             <h5 class="subheader"></h5>
@@ -322,7 +393,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>setRouter()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Sets router by name</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -344,6 +414,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Sets router by name</p></div>
+          <pre><code class="language-javascript">setRouter: function(path, router) {
+    _routers[path] = router;
+},</code></pre>
           <section id="removeRouter">
             <h1>removeRouter</h1>
             <h5 class="subheader"></h5>
@@ -351,7 +425,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>removeRouter()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Removes router by name</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -368,6 +441,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Removes router by name</p></div>
+          <pre><code class="language-javascript">removeRouter: function(path) {
+    delete _routers[path];
+},</code></pre>
           <section id="getRouter">
             <h1>getRouter</h1>
             <h5 class="subheader"></h5>
@@ -375,7 +452,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getRouter()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets router by name</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -397,6 +473,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets router by name</p></div>
+          <pre><code class="language-javascript">getRouter: function(path) {
+    return _routers[path];
+},</code></pre>
           <section id="setDefaultRouter">
             <h1>setDefaultRouter</h1>
             <h5 class="subheader"></h5>
@@ -404,7 +484,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>setDefaultRouter()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Sets default router</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -421,6 +500,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Sets default router</p></div>
+          <pre><code class="language-javascript">setDefaultRouter: function(router) {
+    _defaultRouter = router;
+},</code></pre>
           <section id="getDefaultRouter">
             <h1>getDefaultRouter</h1>
             <h5 class="subheader"></h5>
@@ -429,6 +512,9 @@
             </p>
           </section>
           <div class="description"><p>Gets default router</p></div>
+          <pre><code class="language-javascript">getDefaultRouter: function() {
+    return _defaultRouter;
+},</code></pre>
           <section id="setResolve">
             <h1>setResolve</h1>
             <h5 class="subheader"></h5>
@@ -436,7 +522,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>setResolve()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Sets resolve</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -458,6 +543,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Sets resolve</p></div>
+          <pre><code class="language-javascript">setResolve: function(resolveName, resolveCallback) {
+    _resolves[resolveName] = resolveCallback;
+},</code></pre>
           <section id="removeResolve">
             <h1>removeResolve</h1>
             <h5 class="subheader"></h5>
@@ -465,7 +554,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>removeResolve()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Removes resolve by name</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -482,6 +570,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Removes resolve by name</p></div>
+          <pre><code class="language-javascript">removeResolve: function(resolveName) {
+    delete _resolves[resolveName];
+},</code></pre>
           <section id="getResolve">
             <h1>getResolve</h1>
             <h5 class="subheader"></h5>
@@ -489,7 +581,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>getResolve()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Gets resolve by name</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -506,6 +597,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Gets resolve by name</p></div>
+          <pre><code class="language-javascript">getResolve: function(resolveName) {
+    return _resolves[resolveName];
+},</code></pre>
           <section id="on">
             <h1>on</h1>
             <h5 class="subheader"></h5>
@@ -513,7 +608,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>on()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Adds event listener</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -535,6 +629,13 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Adds event listener</p></div>
+          <pre><code class="language-javascript">on: function(event, listener) {
+    if (!_events[event]) {
+        _events[event] = [];
+    }
+    _events[event].push(listener);
+},</code></pre>
           <section id="off">
             <h1>off</h1>
             <h5 class="subheader"></h5>
@@ -542,7 +643,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>off()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Removes event listener</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -564,6 +664,18 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Removes event listener</p></div>
+          <pre><code class="language-javascript">off: function(event, listener) {
+    if (_events[event]) {
+        var listenerIndex = -1;
+        _events[event].forEach(function(func, index) {
+            if(func === listener) {
+                listenerIndex = index;
+            }
+        });
+        _events[event].splice(listenerIndex, 1);
+    }
+},</code></pre>
           <section id="trigger">
             <h1>trigger</h1>
             <h5 class="subheader"></h5>
@@ -571,7 +683,6 @@
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>trigger()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>Trigger event</p></div>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -588,6 +699,14 @@
               </tr>
             </tbody>
           </table>
+          <div class="description"><p>Trigger event</p></div>
+          <pre><code class="language-javascript">trigger: function(event) {
+    _events[event] &amp;&amp; _events[event].forEach(function(listener) {
+        listener();
+    });
+}
+    };
+})(window, owl);</code></pre>
           <div class="footer site-footer">
             <div class="span site-footer-owner"><a href="https://github.com/mr-doc/mr-doc-theme-cayman">Cayman</a> is maintained by <a href="https://github.com/iwatakeshi">iwatakeshi</a>.</div>
             <div class="span site-footer-credits">This page was generated by <a href="https://github.com/mr-doc/mr-doc">Mr. Doc</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</div>
